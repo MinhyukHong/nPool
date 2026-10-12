@@ -39,7 +39,7 @@ using namespace v8;
 /*---------------------------------------------------------------------------*/
 /* MACRO DEFINITIONS */
 /*---------------------------------------------------------------------------*/
-
+#define MAX_THREAD_POOL_SIZE 1024
 #define TASK_QUEUE_ID       1
 
 /*---------------------------------------------------------------------------*/
@@ -92,6 +92,11 @@ NAN_METHOD(CreateThreadPool)
     // number of threads
     Local<Uint32> v8NumThreads = (info[0])->ToUint32();
     uint32_t numThreads = v8NumThreads->Value();
+
+    if((numThreads == 0) || (numThreads > MAX_THREAD_POOL_SIZE))
+    {
+        return Nan::ThrowError("createThreadPool() - Number of threads must be between 1 and 1024");
+    }
 
     //fprintf(stdout, "[%u] nPool - Num Threads: %u\n", SyncGetThreadId(), numThreads);
 
