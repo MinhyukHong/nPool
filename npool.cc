@@ -103,6 +103,12 @@ NAN_METHOD(CreateThreadPool)
     // create task queue and thread pool
     taskQueue = CreateTaskQueue(TASK_QUEUE_ID);
     threadPool = CreateThreadPool(numThreads, taskQueue, Thread::ThreadInit, Thread::ThreadPostInit, Thread::ThreadDestroy);
+    if(threadPool == 0)
+    {
+        DestroyTaskQueue(taskQueue);
+        taskQueue = 0;
+        return Nan::ThrowError("createThreadPool() - Failed to allocate the thread pool");
+    }
 
     info.GetReturnValue().SetUndefined();
 }
